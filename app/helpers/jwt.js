@@ -12,7 +12,8 @@ function jwt() {
             '/api/users/authenticate',
             '/api/users/register',
             '/api',
-            '/api/songs/search/tinh'
+            /^\/api\/songs\/search\/.*/,
+            /^\/api\/songs\/get\/.*/,
         ]
     });
 }
