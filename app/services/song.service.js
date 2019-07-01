@@ -26,7 +26,7 @@ async function search(query) {
     let service = google.youtube('v3');
     try {
         const searchResults = await service.search.list({
-            auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE-tinh',
+            auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
             part: 'snippet',
             q: query
         });
@@ -38,7 +38,10 @@ async function search(query) {
             console.log(videolist);
             return `This video's ID is ${videolist[0].id.videoId}. Its title is ${videolist[0].snippet.title} and it has published by ${videolist[0].snippet.channelTitle}
             <div class="item">
-                <iframe class="video w100" width="640" height="360" src="//www.youtube.com/embed/${videolist[0].id.videoId}" frameborder="0" allowfullscreen></iframe>
+                <iframe id="ytplayer" class="video w100" width="640" height="360" src="https://www.youtube.com/embed/${videolist[0].id.videoId}?autoplay=1?disablekb=1&controls=0" frameborder="0" allowfullscreen></iframe>
+                <style>
+                    #ytplayer {pointer-events: none;}
+                </style>
             </div>`;
         }
     }
