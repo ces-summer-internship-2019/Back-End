@@ -19,23 +19,25 @@ async function authenticate({ username, password }) {
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '30m' });
+        user.token = token;
+        await user.save()
         return {
             ...userWithoutHash,
-            token
         };
     }
 }
 // processing
-async function logout({ session }) {
-    if (session) {
-        // delete session object
-        session.destroy(function (err) {
-            if (err) {
-                return err;
-            } else {
-                return ;
-            }
-        });
+async function logout ({ token, username }) {
+    // Log user out of the application
+    try {
+        const user = await User.findOne({ username });
+        user.token = null;
+        await user.save();
+        console.log("Successfully Logout");
+        return "Successfully Logout";
+    } catch (error) {
+        console.log(error);
+        return error;
     }
 }
 // processing
