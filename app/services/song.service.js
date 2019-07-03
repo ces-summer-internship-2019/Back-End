@@ -19,11 +19,11 @@ async function add({ id }) {
             part: 'snippet',
             id: id
         });
-        let videoItem = searchResults.data.items[0];
-        if (videoItem.length == 0) {
+        if ( searchResults.data.items.length == 0) {
             console.log('No Video Found');
             return 'No Video Found';
         } else {
+            let videoItem = searchResults.data.items[0];
             let song = new Song({
                 videoId: videoItem.id,
                 title: videoItem.snippet.title,
@@ -72,16 +72,18 @@ async function getSong(videoId) {
             part: 'snippet',
             id:videoId
         });
-        let videolist = searchResults.data.items;
-        if (videolist.length == 0) {
+        if (searchResults.data.items.length == 0) {
             console.log('No Video Found');
             return 'No Video Found';
         } else {
-            console.log(videolist);
-            return `This video's ID is ${videolist[0].id}. Its title is ${videolist[0].snippet.title} and it has published by ${videolist[0].snippet.channelTitle}
-            <div class="item">
-                <iframe class="video w100" width="640" height="360" src="//www.youtube.com/embed/${videolist[0].id}" frameborder="0" allowfullscreen></iframe>
-            </div>`;
+        let videoItem = searchResults.data.items[0];
+            console.log(videoItem);
+            let song = new Song({
+                videoId: videoItem.id,
+                title: videoItem.snippet.title,
+                channelTitle: videoItem.snippet.channelTitle,
+                thumbnails: videoItem.snippet.thumbnails.medium.url,
+            });
         }
     }
     catch (error) {
