@@ -57,22 +57,7 @@ async function searchSongs(query) {
             return 'No Video Found';
         } else {
             console.log(videolist);
-<<<<<<< HEAD
-            return `This video's ID is ${videolist[0].id.videoId}. Its title is ${videolist[0].snippet.title} and it has published by ${videolist[0].snippet.channelTitle}
-            <div class="item">
-                <iframe class="video w100" width="640" height="360" src="//www.youtube.com/embed/${videolist[0].id.videoId}?autoplay=1" frameborder="0" allowfullscreen></iframe>
-            </div>`;
-=======
             return videolist;
-            // return `This video's ID is ${videolist[0].id.videoId}. Its title is ${videolist[0].snippet.title} and it has published by ${videolist[0].snippet.channelTitle}
-            // <div class="item">
-            //     <iframe id="ytplayer" class="video w100" width="640" height="360" src="https://www.youtube.com/embed/${videolist[0].id.videoId}?autoplay=1&disablekb=1&controls=0" 
-            //     allow="autoplay" frameborder="0" allowfullscreen></iframe>
-            //     <style>
-            //         iframe {pointer-events: none;}
-            //     </style>
-            // </div>`;
->>>>>>> origin/haauj
         }
     }
     catch (error) {
