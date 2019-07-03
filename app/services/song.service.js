@@ -18,21 +18,19 @@ async function add({ id }) {
             part: 'snippet',
             id: id
         });
-        let videoItem = searchResults.data.items;
+        let videoItem = searchResults.data.items[0];
         if (videoItem.length == 0) {
             console.log('No Video Found');
             return 'No Video Found';
         } else {
-            console.log(videoItem);
-            return videoItem;
-            // return `This video's ID is ${id}. Its title is ${videolist[0].snippet.title} and it has published by ${videolist[0].snippet.channelTitle}
-            // <div class="item">
-            //     <iframe id="ytplayer" class="video w100" width="640" height="360" src="https://www.youtube.com/embed/${id}?autoplay=1&disablekb=1&controls=0" 
-            //     allow="autoplay" frameborder="0" allowfullscreen></iframe>
-            //     <style>
-            //         iframe {pointer-events: none;}
-            //     </style>
-            // </div>`;
+            let song = new Song({
+                videoId: videoItem.id,
+                title: videoItem.snippet.title,
+                channelTitle: videoItem.snippet.channelTitle,
+                thumbnails: videoItem.snippet.thumbnails.medium.url,
+            });
+            await song.save();
+            return 'Successfully Added';
         }
     }
     catch (error) {

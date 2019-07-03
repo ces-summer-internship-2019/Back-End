@@ -12,11 +12,11 @@ module.exports = router;
 function addToList(req, res, next) {
     songService.add(req.body)
         .then(song => res.json(song))
-        .catch(err => next(err));
+        .catch(err => res.send(err));
 }
 
 function searchByQuery(req, res, next) {
     songService.search(req.params.query)
         .then(msg => res.json(msg))
-        .catch(err => next(err));
+        .catch(err => res.send(err));
 }
