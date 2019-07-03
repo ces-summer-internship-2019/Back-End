@@ -4,7 +4,7 @@ const userService = require('../services/user.service');
 
 // routes
 router.post('/authenticate', authenticate);
-router.get('/logout', logout);
+router.post('/logout', logout);
 router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
@@ -21,8 +21,8 @@ function authenticate(req, res, next) {
 }
 // processing
 function logout(req, res, next) {
-    userService.logout(req)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
+    userService.logout(req.body)
+        .then(msg => res.send(msg))
         .catch(err => next(err));
 }
 // processing

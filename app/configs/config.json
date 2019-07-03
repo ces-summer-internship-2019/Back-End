@@ -1,7 +1,10 @@
 ﻿{
     "connectionString": "mongodb://localhost/node-mongo-registration-login-api",
-    "secret": "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET, IT CAN BE ANY STRING",
-    "baseUrl": "/api/"
+    "secret": "MUSIC WEBSITE OF THE COMPANY - Made by Summer Interns in 2019",
+    "refreshTokenSecret": "Refresh Token for MUSIC WEBSITE OF THE COMPANY",
+    "baseUrl": "/api/",
+    "tokenLife": 900,
+    "refreshTokenLife": 86400
 }
 
 

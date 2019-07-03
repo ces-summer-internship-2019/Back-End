@@ -9,22 +9,27 @@ function jwt() {
     return expressJwt({ secret, isRevoked }).unless({
         path: [
             // public routes that don't require authentication
+<<<<<<< HEAD
             '/api/users/authenticate',
             '/api/users/register',
             '/api',
             /^\/api\/songs\/search\/.*/,
             /^\/api\/songs\/get\/.*/,
+=======
+            "/api/users/authenticate",
+            "/api/users/register",
+            "/api",
+            /^\/api\/songs\/search\/.*/
+>>>>>>> origin/haauj
         ]
     });
 }
 
 async function isRevoked(req, payload, done) {
     const user = await userService.getById(payload.sub);
-
     // revoke token if user no longer exists
     if (!user) {
         return done(null, true);
     }
-
     done();
 };

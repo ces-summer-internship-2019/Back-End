@@ -2,41 +2,46 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    username: { 
-        type: String, 
+    username: {
+        type: String,
         unique: true,
-        trim : true, 
-        required: true 
+        trim: true,
+        required: true
     },
-    hash: { 
-        type: String, 
-        required: true 
-    },
-    firstName: { 
+    hash: {
         type: String,
-        trim : true, 
-        required: true 
+        required: true
     },
-    lastName: { 
+    firstName: {
         type: String,
-        trim : true, 
-        required: true 
+        trim: true,
+        required: true
     },
-    email: { 
+    lastName: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    email: {
         type: String,
         unique: true,
         lowercase: true,
-        trim : true, 
-        required: true 
+        trim: true,
+        required: true
     },
     vote: {
         type: Number,
         default: 5
     },
-    createdDate: { 
-        type: Date, 
-        default: Date.now 
+    createdDate: {
+        type: Date,
+        default: Date.now
+    },
+    token: {
+        default : null,
+        type: String,
     }
+
 });
 
 schema.set('toJSON', { virtuals: true });
