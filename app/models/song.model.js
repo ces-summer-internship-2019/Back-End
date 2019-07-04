@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     videoId: {
         type: String,
-        unique: true,
         trim : true, 
         required: true 
     },

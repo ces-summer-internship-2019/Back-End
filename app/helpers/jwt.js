@@ -1,8 +1,13 @@
 const expressJwt = require('express-jwt');
 const config = require('../configs/config.json');
 const userService = require('../services/user.service');
+const db = require('../helpers/db');
+const User = db.User;
 
-module.exports = jwt;
+module.exports = {
+    jwt,
+    isValid
+};
 
 function jwt() {
     const secret = config.secret;
@@ -26,3 +31,15 @@ async function isRevoked(req, payload, done) {
     }
     done();
 };
+
+async function isValid(req) {
+    var token = req.headers.authorization.split('Bearer ')[1];
+    try {
+        const user = await User.findOne({ token });
+        if (user.token) {
+            return user;
+        }
+    } catch {
+        return null;
+    }
+}

@@ -33,6 +33,10 @@ const schema = new Schema({
         type: Number,
         default: 5
     },
+    songAdd: {
+        type: Number,
+        default: 1
+    },
     createdDate: {
         type: Date,
         default: Date.now
