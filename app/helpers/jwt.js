@@ -18,7 +18,6 @@ function jwt() {
             '/api/users/register',
             '/api',
             /^\/api\/songs\/search\/.*/,
-            /^\/api\/songs\/get\/.*/,
         ]
     });
 }

@@ -6,12 +6,13 @@ const Song = db.Song;
 const User = db.User;
 
 module.exports = {
-    add,
-    search,
-    vote
+    addSongToList,
+    searchSongs,
+    voteASong,
+    getSong
 };
 
-async function add({ id }, username) {
+async function addSongToList({ id }, username) {
     const user = await User.findOne({ username });
     if (user.songAdd === 0) {
         return 'Already used Add';
@@ -47,7 +48,7 @@ async function add({ id }, username) {
 
 }
 // processing
-async function search(query) {
+async function searchSongs(query) {
     let service = google.youtube('v3');
     try {
         const searchResults = await service.search.list({
@@ -72,7 +73,7 @@ async function search(query) {
     }
 }
 
-async function vote({ video_id, isUpvote }, username) {   // video_id : id in DB, not in Youtube
+async function voteASong({ video_id, isUpvote }, username) {   // video_id : id in DB, not in Youtube
     mongoose.set('useFindAndModify', false);
     try {
         const votingUser = await User.findOne({ username });
