@@ -37,7 +37,10 @@ async function add({ id }, username) {
                 await song.save();
                 user.songAdd = 0;
                 await user.save();
-                return 'Successfully Added';
+                return {
+                    status : "201",
+                    data : song
+                };
             }
         }
         catch (error) {
