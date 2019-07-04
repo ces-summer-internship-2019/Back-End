@@ -32,8 +32,8 @@ async function isRevoked(req, payload, done) {
 };
 
 async function isValid(req) {
-    var token = req.headers.authorization.split('Bearer ')[1];
     try {
+    var token = req.headers.authorization.split('Bearer')[1];
         const user = await User.findOne({ token });
         if (user.token) {
             return user;

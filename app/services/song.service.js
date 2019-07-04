@@ -15,7 +15,10 @@ module.exports = {
 async function addSongToList({ id }, username) {
     const user = await User.findOne({ username });
     if (user.songAdd === 0) {
-        return 'Already used Add';
+        return {
+            status: '404',
+            message: 'Already used Add'
+        }
     } else {
         let service = google.youtube('v3');
         try {
@@ -26,8 +29,10 @@ async function addSongToList({ id }, username) {
             });
             let videoItem = searchResults.data.items[0];
             if (videoItem.length == 0) {
-                console.log('No Video Found');
-                return 'No Video Found';
+                return {
+                    status: '204',
+                    message: 'No video found'
+                }
             } else {
                 let song = new Song({
                     videoId: videoItem.id,
@@ -38,11 +43,17 @@ async function addSongToList({ id }, username) {
                 await song.save();
                 user.songAdd = 0;
                 await user.save();
-                return 'Successfully Added';
+                return {
+                    status: '204',
+                    message: 'Sucessfully Added'
+                }
             }
         }
         catch (error) {
-            return error;
+            return {
+                status: '404',
+                message: error
+            }
         }
     }
 
@@ -54,18 +65,23 @@ async function searchSongs(query) {
         const searchResults = await service.search.list({
             auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
             part: 'snippet',
-            type:'video',
-            videoEmbeddable:true,
+            type: 'video',
+            videoEmbeddable: true,
             maxResults: 5,
             videoCategoryId: '10',
             q: query
         });
         let videolist = searchResults.data.items;
         if (videolist.length == 0) {
-            console.log('No Video Found');
-            return 'No Video Found';
+            return {
+                status: '204',
+                message: 'No video found'
+            };
         } else {
-            return videolist;
+            return {
+                status: '200',
+                data: videolist
+            };
         }
     }
     catch (error) {
@@ -77,7 +93,6 @@ async function voteASong({ video_id, isUpvote }, username) {   // video_id : id 
     mongoose.set('useFindAndModify', false);
     try {
         const votingUser = await User.findOne({ username });
-        console.log(votingUser.username);
         if (votingUser.vote > 0) {
             const userDecreaseVote = await User.findOneAndUpdate({ username: username }, { $inc: { vote: -1 } });
             if (userDecreaseVote) {
@@ -101,14 +116,12 @@ async function getSong(videoId) {
         const searchResults = await service.videos.list({
             auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
             part: 'snippet',
-            id:videoId
+            id: videoId
         });
         if (searchResults.data.items.length == 0) {
-            console.log('No Video Found');
             return 'No Video Found';
         } else {
-        let videoItem = searchResults.data.items[0];
-            console.log(videoItem);
+            let videoItem = searchResults.data.items[0];
             let song = new Song({
                 videoId: videoItem.id,
                 title: videoItem.snippet.title,
@@ -118,6 +131,6 @@ async function getSong(videoId) {
         }
     }
     catch (error) {
-        return next("Error in search API " + error);
+        return { message: "Error in search API " + error };
     }
 }

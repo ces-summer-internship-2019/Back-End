@@ -28,7 +28,7 @@ function logout(req, res, next) {
 // processing
 function register(req, res, next) {
     userService.create(req.body)
-        .then(() => res.status(201).json({message: "New User succesfully Created!"}))
+        .then(() => res.status(201).json({ message: "New User succesfully Created!" }))
         .catch(err => next(err));
 }
 
@@ -40,7 +40,7 @@ function getAll(req, res, next) {
 
 function getCurrent(req, res, next) {
     userService.getById(req.user.sub)
-        .then(user => user ? res.json(req.user) : res.sendStatus(404).json({message: "Not logged in!"}))
+        .then(user => user ? res.json(req.user) : res.sendStatus(404).json({ message: "Not logged in!" }))
         .catch(err => next(err));
 }
 
@@ -52,12 +52,12 @@ function getById(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(() => res.status(200).json({message:"User successfully updated !!!"}))
+        .then(() => res.status(200).json({ message: "User successfully updated !!!" }))
         .catch(err => next(err));
 }
 
 function _delete(req, res, next) {
     userService.delete(req.params.id)
-        .then(() => res.status(200).json({message:"User successfully deleted !!!"}))
+        .then(() => res.status(200).json({ message: "User successfully deleted !!!" }))
         .catch(err => next(err));
 }
