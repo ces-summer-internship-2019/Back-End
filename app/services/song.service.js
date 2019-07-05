@@ -16,9 +16,8 @@ async function addSongToList({ id }, username) {
     const user = await User.findOne({ username });
     if (user.songAdd === 0) {
         return {
-            status: '404',
             message: 'Already used Add'
-        }
+        };
     } else {
         let service = google.youtube('v3');
         try {
@@ -30,9 +29,8 @@ async function addSongToList({ id }, username) {
             let videoItem = searchResults.data.items[0];
             if (videoItem.length == 0) {
                 return {
-                    status: '204',
                     message: 'No video found'
-                }
+                };
             } else {
                 let song = new Song({
                     videoId: videoItem.id,
@@ -44,16 +42,14 @@ async function addSongToList({ id }, username) {
                 user.songAdd = 0;
                 await user.save();
                 return {
-                    status: '204',
                     message: 'Sucessfully Added'
-                }
+                };
             }
         }
         catch (error) {
             return {
-                status: '404',
                 message: error
-            }
+            };
         }
     }
 
@@ -74,13 +70,11 @@ async function searchSongs(query) {
         let videolist = searchResults.data.items;
         if (videolist.length == 0) {
             return {
-                status: '204',
                 message: 'No video found'
             };
         } else {
             const filteredListVideo = await filterVideoResult(videolist);
             return {
-                status: '200',
                 data: filteredListVideo
             };
         }
@@ -102,12 +96,12 @@ async function voteASong({ video_id, isUpvote }, username) {   // video_id : id 
             }
         }
         else {
-            return { status: '202', Message: 'Out of vote!!!' }
+            return { Message: 'Out of vote!!!' }
         }
     }
     catch (error) {
         return ({
-            status: '202', Message: error
+             Message: error
         });
     }
 }
@@ -120,7 +114,7 @@ async function getSong(videoId) {
             id: videoId
         });
         if (searchResults.data.items.length == 0) {
-            return 'No Video Found';
+            return  { message: 'No Video Found'};
         } else {
             let videoItem = searchResults.data.items[0];
             let song = new Song({

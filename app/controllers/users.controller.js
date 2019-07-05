@@ -16,7 +16,7 @@ module.exports = router;
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
+        .then(user => user ? res.status(200).json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
 }
 // processing
@@ -46,7 +46,7 @@ function getCurrent(req, res, next) {
 
 function getById(req, res, next) {
     userService.getById(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
+        .then(user => user ? res.status(200).json(user) : res.sendStatus(404))
         .catch(err => next(err));
 }
 
