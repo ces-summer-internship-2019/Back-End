@@ -7,9 +7,12 @@ const User = db.User;
 
 // routes
 router.get('/search/:query', searchByQuery);
+router.get('/get/list', getPlayList);
+router.get('/get/:id', getSongById);
 router.post('/add/', addToList);
 router.post('/vote/', votingSong);
-router.get('/get/:id', getSongById);
+
+
 
 module.exports = router;
 
@@ -17,7 +20,7 @@ async function addToList(req, res) {
     const user = await jwt.isValid(req);
     if (user) {
         songService.addSongToList(req.body, user.username)
-            .then(song => res.status(200).send(song))
+            .then(song => res.status(song.status).json(song.message))
             .catch(err => res.status(400).send(err));
     } else {
         res.status(403).json({ message: "Invalid TOKEN!!!" });
@@ -26,13 +29,13 @@ async function addToList(req, res) {
 
 async function searchByQuery(req, res) {
     songService.searchSongs(req.params.query)
-        .then(msg => res.status(200).json(msg))
+        .then(msg => res.status(msg.status).json(msg.message))
         .catch(err => res.status(400).send(err));
 }
-async function getSongById(req, res, next) {
+async function getSongById(req, res) {
     if (await jwt.isValid(req)) {
         songService.getSong(req.params.id)
-            .then(msg => res.status(200).send(msg))
+            .then(msg => res.status(msg.status).json(msg.message))
             .catch(err => next(err));
     } else {
         res.status(403).json({ message: "Invalid TOKEN!!!" });
@@ -42,9 +45,15 @@ async function votingSong(req, res) {   // upvote-downvote:true-false
     const user = await jwt.isValid(req);
     if (user) {
         songService.voteASong(req.body, user.username)
-            .then(msg => res.status(200).json(msg))
+            .then(msg => res.status(msg.status).json(msg.message))
             .catch(err => res.status(400).send(err));
     } else {
         res.status(403).json({ message: "Invalid TOKEN!!!" });
     }
+}
+
+async function getPlayList(req, res) {
+    songService.getPlaylist()
+        .then(msg => res.status(msg.status).json(msg.message))
+        .catch(err => res.status(400).send(err));
 }

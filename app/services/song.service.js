@@ -9,13 +9,15 @@ module.exports = {
     addSongToList,
     searchSongs,
     voteASong,
-    getSong
+    getSong,
+    getPlaylist,
 };
 
 async function addSongToList({ id }, username) {
     const user = await User.findOne({ username });
     if (user.songAdd === 0) {
         return {
+            status: 204,
             message: 'Already used Add'
         };
     } else {
@@ -29,6 +31,7 @@ async function addSongToList({ id }, username) {
             let videoItem = searchResults.data.items[0];
             if (videoItem.length == 0) {
                 return {
+                    status: 204,
                     message: 'No video found'
                 };
             } else {
@@ -37,11 +40,13 @@ async function addSongToList({ id }, username) {
                     title: videoItem.snippet.title,
                     channelTitle: videoItem.snippet.channelTitle,
                     thumbnails: videoItem.snippet.thumbnails.medium.url,
+                    addedUser: username
                 });
                 await song.save();
                 user.songAdd = 0;
                 await user.save();
                 return {
+                    status: 200,
                     message: 'Sucessfully Added'
                 };
             }
@@ -70,12 +75,14 @@ async function searchSongs(query) {
         let videolist = searchResults.data.items;
         if (videolist.length == 0) {
             return {
+                status: 204,
                 message: 'No video found'
             };
         } else {
             const filteredListVideo = await filterVideoResult(videolist);
             return {
-                data: filteredListVideo
+                status: 200,
+                message: filteredListVideo
             };
         }
     }
@@ -96,12 +103,15 @@ async function voteASong({ video_id, isUpvote }, username) {   // video_id : id 
             }
         }
         else {
-            return { Message: 'Out of vote!!!' }
+            return {
+                status: 202,
+                message: 'Out of vote!!!'
+            }
         }
     }
     catch (error) {
         return ({
-             Message: error
+            Message: error
         });
     }
 }
@@ -114,7 +124,10 @@ async function getSong(videoId) {
             id: videoId
         });
         if (searchResults.data.items.length == 0) {
-            return  { message: 'No Video Found'};
+            return {
+                status: 200,
+                message: 'No Video Found'
+            };
         } else {
             let videoItem = searchResults.data.items[0];
             let song = new Song({
@@ -126,7 +139,10 @@ async function getSong(videoId) {
         }
     }
     catch (error) {
-        return { message: "Error in search API " + error };
+        return {
+            status: 400,
+            message: "Error in search API " + error
+        };
     }
 }
 
@@ -141,4 +157,27 @@ async function filterVideoResult(videolist) {
         })
     )
     return filterdList;
+}
+
+async function getPlaylist() {
+    try {
+        const playList = await Song.find();
+        if (playList.length > 0)
+            return {
+                status: 200,
+                message: playList
+            };
+        else {
+            return {
+                status: 204,
+                message: "There is no song in the play list now!"
+            };
+        }
+    }
+    catch (error) {
+        return {
+            status: 204,
+            message: "Error" + error
+        };
+    }
 }
