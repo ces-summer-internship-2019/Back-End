@@ -67,7 +67,7 @@ async function search(query) {
         }
     }
     catch (error) {
-        return next(error);
+        return error;
     }
 }
 
