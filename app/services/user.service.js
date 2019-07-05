@@ -27,7 +27,7 @@ async function authenticate({ username, password }) {
         };
     }
 }
-// processing
+
 async function logout({ username }) {
     // Log user out of the application
     try {
@@ -41,7 +41,7 @@ async function logout({ username }) {
         return error;
     }
 }
-// processing
+
 async function getAll() {
     return await User.find().select('-hash');
 }
