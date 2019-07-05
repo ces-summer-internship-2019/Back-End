@@ -54,7 +54,7 @@ async function search(query) {
     let service = google.youtube('v3');
     try {
         const searchResults = await service.search.list({
-            auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
+            auth: 'AIzaSyDlbFOx0xj-a2-vByhz3Q9Db190kz-aXE8',
             part: 'snippet',
             q: query
         });

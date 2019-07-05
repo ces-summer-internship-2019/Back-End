@@ -27,7 +27,7 @@ async function searchByQuery(req, res) {
     if (await jwt.isValid(req)) {
         songService.search(req.params.query)
                 .then(msg => res.json(msg))
-                .catch(err => res.send(err));
+                .catch(err => res.json('err'));
     } else {
         res.send("Invalid TOKEN!!!");
     }
