@@ -23,7 +23,7 @@ async function addSongToList({ id }, username) {
         let service = google.youtube('v3');
         try {
             const searchResults = await service.videos.list({
-                auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
+                auth: 'AIzaSyDlbFOx0xj-a2-vByhz3Q9Db190kz-aXE8',
                 part: 'snippet',
                 id: id
             });
@@ -63,7 +63,7 @@ async function searchSongs(query) {
     let service = google.youtube('v3');
     try {
         const searchResults = await service.search.list({
-            auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
+            auth: 'AIzaSyDlbFOx0xj-a2-vByhz3Q9Db190kz-aXE8',
             part: 'snippet',
             type: 'video',
             videoEmbeddable: true,
@@ -78,9 +78,10 @@ async function searchSongs(query) {
                 message: 'No video found'
             };
         } else {
+            const filteredListVideo = await filterVideoResult(videolist);
             return {
                 status: '200',
-                data: videolist
+                data: filteredListVideo
             };
         }
     }
@@ -114,7 +115,7 @@ async function getSong(videoId) {
     let service = google.youtube('v3');
     try {
         const searchResults = await service.videos.list({
-            auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
+            auth: 'AIzaSyDlbFOx0xj-a2-vByhz3Q9Db190kz-aXE8',
             part: 'snippet',
             id: videoId
         });
@@ -133,4 +134,17 @@ async function getSong(videoId) {
     catch (error) {
         return { message: "Error in search API " + error };
     }
+}
+
+async function filterVideoResult(videolist) {
+    let filterdList = [];
+    videolist.forEach(item =>
+        filterdList.push({
+            videoId: item.id.videoId,
+            title: item.snippet.title,
+            channelTitle: item.snippet.channelTitle,
+            thumbnails: item.snippet.thumbnails.medium.url,
+        })
+    )
+    return filterdList;
 }

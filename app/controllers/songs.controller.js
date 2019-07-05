@@ -25,13 +25,9 @@ async function addToList(req, res) {
 }
 
 async function searchByQuery(req, res) {
-    if (await jwt.isValid(req)) {
-        songService.searchSongs(req.params.query)
-            .then(msg => res.json(msg))
-            .catch(err => res.send(err));
-    } else {
-        res.status(404).json({ message: "Invalid TOKEN!!!" });
-    }
+    songService.searchSongs(req.params.query)
+        .then(msg => res.json(msg))
+        .catch(err => res.send(err));
 }
 async function getSongById(req, res, next) {
     if (await jwt.isValid(req)) {

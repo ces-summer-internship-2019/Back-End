@@ -34,10 +34,8 @@ async function logout({ token, username }) {
         const user = await User.findOne({ username });
         user.token = null;
         await user.save();
-        console.log("Successfully Logout");
         return "Successfully Logout";
     } catch (error) {
-        console.log(error);
         return error;
     }
 }
