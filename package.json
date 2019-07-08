@@ -2,7 +2,6 @@
     "name": "music-app",
     "version": "1.0.0",
     "description": "Music App for the Company",
-    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/ces-summer-internship-2019/Back-End.git"

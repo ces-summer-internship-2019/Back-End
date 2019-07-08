@@ -1,6 +1,6 @@
 ﻿const express = require('express');
 const router = express.Router();
-const songService = require('../services/song.service');
+const songService = require('./song.service');
 const db = require('../helpers/db');
 const jwt = require('../helpers/jwt');
 const User = db.User;

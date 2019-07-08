@@ -19,9 +19,9 @@ app.get('/api', (req, res) => {
     res.send({ msg: 'Hello! Server is up and running' });
 });
 
-app.use('/api/users', require('./controllers/users.controller'));
+app.use('/api/users', require('./users/users.controller'));
 
-app.use('/api/songs', require('./controllers/songs.controller'));
+app.use('/api/songs', require('./songs/songs.controller'));
 
 // catch all route
 app.all('*', (req, res) => {
