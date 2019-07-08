@@ -6,16 +6,18 @@ const jwt = require('../helpers/jwt');
 const User = db.User;
 
 // routes
-router.get('/search/:query', searchByQuery);
-router.post('/add/', addToList);
-router.post('/vote/', votingSong);
+router.get('/search/:query', searchSong);
+router.get('/playlist', getPlaylist);
+router.post('/add', addSong);
+router.post('/vote', voteSong);
+router.post('/remove', removeSong);
 
 module.exports = router;
 
-async function addToList(req, res) {
+async function addSong(req, res) {
     const user = await jwt.isValid(req);
     if (user) {
-        songService.add(req.body, user.username)
+        songService.addSong(req.body, user.username)
             .then(song => res.json(song))
             .catch(err => res.send(err));
     } else {
@@ -23,23 +25,35 @@ async function addToList(req, res) {
     }
 }
 
-async function searchByQuery(req, res) {
+async function searchSong(req, res) {
     if (await jwt.isValid(req)) {
-        songService.search(req.params.query)
-                .then(msg => res.json(msg))
-                .catch(err => res.json(err));
+        songService.searchSong(req.params.query)
+            .then(msg => res.json(msg))
+            .catch(err => res.json(err));
     } else {
         res.send("Invalid TOKEN!!!");
     }
 }
 
-async function votingSong(req, res) {   // upvote-downvote:true-false
+async function voteSong(req, res) {   // upvote-downvote:true-false
     const user = await jwt.isValid(req);
     if (user) {
-        songService.vote(req.body, user.username)
-                .then(msg => res.json(msg))
-                .catch(err => res.send(err));
+        songService.voteSong(req.body, user.username)
+            .then(msg => res.status(msg.status).json(msg.message))
+            .catch(err => res.status(400).send(err));
     } else {
         res.send("Invalid TOKEN!!!");
     }
+}
+
+async function getPlaylist(req, res) {   // upvote-downvote:true-false
+    songService.getPlaylist()
+        .then(msg => res.status(msg.status).json(msg.message))
+        .catch(err => res.status(400).send(err));
+}
+
+async function removeSong(req, res) {   // upvote-downvote:true-false
+    songService.removeSong(req.body)
+        .then(msg => res.status(msg.status).json(msg.message))
+        .catch(err => res.status(400).send(err));
 }
