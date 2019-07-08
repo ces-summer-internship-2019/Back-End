@@ -123,7 +123,7 @@ async function getSong(videoId) {
             part: 'snippet',
             id: videoId
         });
-        if (searchResults.data.items.length == 0) {
+        if (searchResults.data.items.length === 0) {
             return {
                 status: 200,
                 message: 'No Video Found'
@@ -161,7 +161,20 @@ async function filterVideoResult(videolist) {
 
 async function getPlaylist() {
     try {
-        const playList = await Song.find();
+        const playList = await Song.aggregate([
+            {
+                $project: {
+                    voteValue: { $subtract: ["$upvote", "$downvote"] },
+                    videoID: "$videoId",
+                    title: "$title",
+                    channelTitle: "$channelTitle",
+                    thumbnails: "$thumbnails"
+                }
+            },
+            {
+                $sort: { voteValue: -1 }
+            }
+        ]);
         if (playList.length > 0)
             return {
                 status: 200,
@@ -178,6 +191,28 @@ async function getPlaylist() {
         return {
             status: 204,
             message: "Error" + error
+        };
+    }
+}
+
+async function removeFinishedSong({video_id}) {
+    try {
+        const removeResult = Song.remove({ _id: mongoose.Types.ObjectId(video_id) });
+        if (removeResult)
+            return {
+                status: 200,
+                message: "Remove song succesfully!"
+            };
+        else
+        return {
+            status: 202,
+            message: "Failed to remove song!"
+        };
+    }
+    catch (error) {
+        return {
+            status: 202,
+            message: error
         };
     }
 }

@@ -11,6 +11,7 @@ router.get('/get/list', getPlayList);
 router.get('/get/:id', getSongById);
 router.post('/add/', addToList);
 router.post('/vote/', votingSong);
+router.post('/remove', removeSongFinished);
 
 
 
@@ -23,7 +24,7 @@ async function addToList(req, res) {
             .then(song => res.status(song.status).json(song.message))
             .catch(err => res.status(400).send(err));
     } else {
-        res.status(403).json({ message: "Invalid TOKEN!!!" });
+        res.status(401).json({ message: "Invalid TOKEN!!!" });
     }
 }
 
@@ -38,7 +39,7 @@ async function getSongById(req, res) {
             .then(msg => res.status(msg.status).json(msg.message))
             .catch(err => next(err));
     } else {
-        res.status(403).json({ message: "Invalid TOKEN!!!" });
+        res.status(401).json({ message: "Invalid TOKEN!!!" });
     }
 }
 async function votingSong(req, res) {   // upvote-downvote:true-false
@@ -48,7 +49,7 @@ async function votingSong(req, res) {   // upvote-downvote:true-false
             .then(msg => res.status(msg.status).json(msg.message))
             .catch(err => res.status(400).send(err));
     } else {
-        res.status(403).json({ message: "Invalid TOKEN!!!" });
+        res.status(401).json({ message: "Invalid TOKEN!!!" });
     }
 }
 
@@ -56,4 +57,15 @@ async function getPlayList(req, res) {
     songService.getPlaylist()
         .then(msg => res.status(msg.status).json(msg.message))
         .catch(err => res.status(400).send(err));
+}
+
+async function removeSongFinished(req, res) {
+    const user = await jwt.isValid(req);
+    if (user) {
+        songService.removeSongFinished(req.body)
+            .then(msg => res.status(msg.status).json(msg.message))
+            .catch(err => res.status(400).send(err));
+    } else {
+        res.status(401).json({ message: "Invalid TOKEN!!!" });
+    }
 }
