@@ -60,12 +60,7 @@ async function getPlayList(req, res) {
 }
 
 async function removeSongFinished(req, res) {
-    const user = await jwt.isValid(req);
-    if (user) {
-        songService.removeSongFinished(req.body)
-            .then(msg => res.status(msg.status).json(msg.message))
-            .catch(err => res.status(400).send(err));
-    } else {
-        res.status(401).json({ message: "Invalid TOKEN!!!" });
-    }
+    songService.removeFinishedSong(req.body)
+        .then(msg => res.status(msg.status).json(msg.message))
+        .catch(err => res.status(400).send(err));
 }

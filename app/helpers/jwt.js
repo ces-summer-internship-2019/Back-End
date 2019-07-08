@@ -18,6 +18,8 @@ function jwt() {
             '/api/users/register',
             '/api',
             '/api/songs/get/list',
+            '/api/songs/remove',            
+            /^\/api\/songs\/get\/.*/,
             /^\/api\/songs\/search\/.*/,
         ]
     });
@@ -34,7 +36,7 @@ async function isRevoked(req, payload, done) {
 
 async function isValid(req) {
     try {
-    var token = req.headers.authorization.split('Bearer')[1];
+    var token = req.headers.authorization.split('Bearer ')[1];
         const user = await User.findOne({ token });
         if (user.token) {
             return user;

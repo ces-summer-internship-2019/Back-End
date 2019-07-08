@@ -11,6 +11,7 @@ module.exports = {
     voteASong,
     getSong,
     getPlaylist,
+    removeFinishedSong
 };
 
 async function addSongToList({ id }, username) {
@@ -197,7 +198,7 @@ async function getPlaylist() {
 
 async function removeFinishedSong({video_id}) {
     try {
-        const removeResult = Song.remove({ _id: mongoose.Types.ObjectId(video_id) });
+        const removeResult = await Song.deleteOne({ _id: mongoose.Types.ObjectId(video_id) });
         if (removeResult)
             return {
                 status: 200,
