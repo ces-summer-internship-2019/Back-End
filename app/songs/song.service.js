@@ -21,7 +21,7 @@ async function addSong({ id }, username) {
         let service = google.youtube('v3');
         try {
             const searchResults = await service.videos.list({
-                auth: 'AIzaSyBfmlyyM7uBtom1wBGVkTUuY98PKhHa3iE',
+                auth: config.API_KEY,
                 part: 'snippet',
                 id: id
             });
@@ -56,7 +56,7 @@ async function searchSong(query) {
     let service = google.youtube('v3');
     try {
         const searchResults = await service.search.list({
-            auth: 'AIzaSyDlbFOx0xj-a2-vByhz3Q9Db190kz-aXE8',
+            auth: config.API_KEY,
             part: 'snippet',
             type: 'video',
             videoEmbeddable: true,
