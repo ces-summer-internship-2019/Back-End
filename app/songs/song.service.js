@@ -130,6 +130,7 @@ async function getPlaylist() {
                     downvote: "$downvote",
                     videoID: "$videoId",
                     title: "$title",
+                    duration: "$duration",
                     channelTitle: "$channelTitle",
                     thumbnails: "$thumbnails"
                 }
