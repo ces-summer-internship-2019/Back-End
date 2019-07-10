@@ -22,7 +22,7 @@ async function addSong({ id }, username) {
         try {
             const searchResults = await service.videos.list({
                 auth: config.API_KEY,
-                part: 'snippet',
+                part: 'snippet, contentDetails',
                 id: id
             });
             let videoItem = searchResults.data.items[0];
@@ -35,6 +35,7 @@ async function addSong({ id }, username) {
                     title: videoItem.snippet.title,
                     channelTitle: videoItem.snippet.channelTitle,
                     thumbnails: videoItem.snippet.thumbnails.medium.url,
+                    duration: convert_time(videoItem.contentDetails.duration)
                 });
                 await song.save();
                 user.songAdd = 0;
@@ -60,7 +61,7 @@ async function searchSong(query) {
             part: 'snippet',
             type: 'video',
             videoEmbeddable: true,
-            maxResults: 5,
+            maxResults: 10,
             videoCategoryId: '10',
             q: query
         });
@@ -176,4 +177,37 @@ async function removeSong({video_id}) {
             message: error
         };
     }
+}
+
+function convert_time(duration) {
+    var a = duration.match(/\d+/g);
+
+    if (duration.indexOf('M') >= 0 && duration.indexOf('H') == -1 && duration.indexOf('S') == -1) {
+        a = [0, a[0], 0];
+    }
+
+    if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1) {
+        a = [a[0], 0, a[1]];
+    }
+    if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1 && duration.indexOf('S') == -1) {
+        a = [a[0], 0, 0];
+    }
+
+    duration = 0;
+
+    if (a.length == 3) {
+        duration = duration + parseInt(a[0]) * 3600;
+        duration = duration + parseInt(a[1]) * 60;
+        duration = duration + parseInt(a[2]);
+    }
+
+    if (a.length == 2) {
+        duration = duration + parseInt(a[0]) * 60;
+        duration = duration + parseInt(a[1]);
+    }
+
+    if (a.length == 1) {
+        duration = duration + parseInt(a[0]);
+    }
+    return duration
 }
