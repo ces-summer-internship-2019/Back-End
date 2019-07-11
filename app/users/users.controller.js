@@ -13,7 +13,9 @@ router.get('/:id', getById);
 router.put('/:id', validate('update'), update);
 router.delete('/:id', _delete);
 
+
 module.exports = router;
+module.exports.reset = reset;
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
@@ -88,4 +90,9 @@ function validate(method) {
             ]
         }
     }
+}
+function reset() {
+    userService.reset()
+        .then(msg => console.log(msg.message))
+        .catch(err => console.log(err));
 }

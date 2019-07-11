@@ -11,7 +11,8 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    reset
 };
 
 async function authenticate({ username, password }) {
@@ -56,7 +57,7 @@ async function create(userParam) {
     if (await User.findOne({ username: userParam.username })) {
         throw 'Username ' + userParam.username + ' is already taken';
     }
-    
+
     const user = new User(userParam);
 
     // hash password
@@ -95,4 +96,18 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function reset() {
+    await User.find({}, function (err, users) {
+        if (err) throw err;
+        users.forEach(function (user) {
+            user.vote = 5;
+            user.songAdd = 1;
+            user.save();
+        })
+    });
+    return {
+        message: "Successfully Reset User!!!"
+    };
 }

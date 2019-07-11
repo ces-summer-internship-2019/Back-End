@@ -10,7 +10,8 @@ module.exports = {
     searchSong,
     voteSong,
     getPlaylist,
-    removeSong
+    removeSong,
+    reset
 };
 
 async function addSong({ id }, username) {
@@ -41,8 +42,8 @@ async function addSong({ id }, username) {
                 user.songAdd = 0;
                 await user.save();
                 return {
-                    status : "201",
-                    data : song
+                    status: "201",
+                    data: song
                 };
             }
         }
@@ -88,7 +89,6 @@ async function voteSong({ video_id, isUpvote }, username) {   // video_id : id i
     mongoose.set('useFindAndModify', false);
     try {
         const votingUser = await User.findOne({ username });
-        console.log(votingUser.username);
         if (votingUser.vote > 0) {
             const userDecreaseVote = await User.findOneAndUpdate({ username: username }, { $inc: { vote: -1 } });
             if (userDecreaseVote) {
@@ -158,7 +158,7 @@ async function getPlaylist() {
         };
     }
 }
-async function removeSong({video_id}) {
+async function removeSong({ video_id }) {
     try {
         const removeResult = await Song.deleteOne({ _id: mongoose.Types.ObjectId(video_id) });
         if (removeResult)
@@ -167,10 +167,10 @@ async function removeSong({video_id}) {
                 message: "Remove song succesfully!"
             };
         else
-        return {
-            status: 202,
-            message: "Failed to remove song!"
-        };
+            return {
+                status: 202,
+                message: "Failed to remove song!"
+            };
     }
     catch (error) {
         return {
@@ -211,4 +211,10 @@ function convert_time(duration) {
         duration = duration + parseInt(a[0]);
     }
     return duration
+}
+async function reset() {
+    await Song.deleteMany({});
+    return {
+        message: "Successfully Reset Song!!!"
+    };
 }

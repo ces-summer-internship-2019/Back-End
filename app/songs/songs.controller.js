@@ -13,6 +13,7 @@ router.post('/vote', voteSong);
 router.post('/remove', removeSong);
 
 module.exports = router;
+module.exports.reset = reset;
 
 async function addSong(req, res) {
     const user = await jwt.isValid(req);
@@ -46,14 +47,19 @@ async function voteSong(req, res) {   // upvote-downvote:true-false
     }
 }
 
-async function getPlaylist(req, res) {   // upvote-downvote:true-false
+function getPlaylist(req, res) {   // upvote-downvote:true-false
     songService.getPlaylist()
         .then(msg => res.status(msg.status).json(msg.message))
         .catch(err => res.status(400).send(err));
 }
 
-async function removeSong(req, res) {   // upvote-downvote:true-false
+function removeSong(req, res) {   // upvote-downvote:true-false
     songService.removeSong(req.body)
         .then(msg => res.status(msg.status).json(msg.message))
         .catch(err => res.status(400).send(err));
+}
+function reset() {
+    songService.reset()
+        .then(msg => console.log(msg.message))
+        .catch(err => console.log(err));
 }
