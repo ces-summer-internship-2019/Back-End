@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <p> Messages: <span id='uwu'> </span> </p>
+  <button onclick="myFunction()">Click me</button>
+
+  <p id="demo"></p>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io.connect();
+    socket.on('timene', function (data) {
+      document.getElementById("uwu").innerHTML = data;
+    })
+  </script>
+</body>
+
+</html>

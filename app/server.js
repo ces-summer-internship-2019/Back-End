@@ -8,6 +8,8 @@ const errorHandler = require('./helpers/error-handler');
 const cron = require('node-schedule');
 const userController = require('./users/users.controller');
 const songController = require('./songs/songs.controller');
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -16,9 +18,15 @@ app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt.jwt());
 
+
 // api routes
 app.get('/api', (req, res) => {
     res.send({ msg: 'Hello! Server is up and running' });
+});
+
+// socket io test routes
+app.get('/socket-io', (req, res) => {
+    res.sendFile('socket-test.html', { root: __dirname });
 });
 
 app.use('/api/users', require('./users/users.controller'));
@@ -36,7 +44,7 @@ app.use(errorHandler);
 
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;
-const server = app.listen(port, function () {
+server.listen(port, function () {
     console.log('Server listening on port ' + port);
     // reset by schedule at 5:30 pm
     /*
@@ -49,6 +57,16 @@ const server = app.listen(port, function () {
             songController.reset();
         });
     */
-    
+});
+io.sockets.on('connection', function (socket) {
+    // connections.push(socket);
+    // console.log(socket.id);
+    const rule = new cron.RecurrenceRule();
+    rule.hour = 15;
+    rule.minute = 16;
+    cron.scheduleJob(rule, function () {
+        msg = "Play";
+        io.sockets.emit('timene', msg);
+    });
 });
 
