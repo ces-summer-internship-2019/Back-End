@@ -66,8 +66,8 @@ io.sockets.on('connection', async function (socket) {
     const playlist = (await songService.getPlaylist()).message;
     let scheduleTime = [];
     scheduleTime[0] = new cron.RecurrenceRule();
-    scheduleTime[0].hour = 11;
-    scheduleTime[0].minute = 36;
+    scheduleTime[0].hour = 14;
+    scheduleTime[0].minute = 30;
     scheduleTime[0].second = 0;
 
     for (let i = 1; i < playlist.length; i++) {
