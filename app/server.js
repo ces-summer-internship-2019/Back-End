@@ -8,8 +8,10 @@ const errorHandler = require('./helpers/error-handler');
 const cron = require('node-schedule');
 const userController = require('./users/users.controller');
 const songController = require('./songs/songs.controller');
+const songService = require('./songs/song.service');
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
+var currentSong = undefined;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -58,15 +60,56 @@ server.listen(port, function () {
         });
     */
 });
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', async function (socket) {
     // connections.push(socket);
     // console.log(socket.id);
-    const rule = new cron.RecurrenceRule();
-    rule.hour = 15;
-    rule.minute = 16;
-    cron.scheduleJob(rule, function () {
-        msg = "Play";
-        io.sockets.emit('timene', msg);
-    });
+    const playlist = (await songService.getPlaylist()).message;
+    let scheduleTime = [];
+    scheduleTime[0] = new cron.RecurrenceRule();
+    scheduleTime[0].hour = 11;
+    scheduleTime[0].minute = 36;
+    scheduleTime[0].second = 0;
+
+    for (let i = 1; i < playlist.length; i++) {
+        const duration = playlist[i - 1].duration;
+        const hour = (duration / 3600 | 0);
+        const minute = ((duration - 3600 * hour) / 60 | 0);
+        const sec = duration - 3600 * hour - 60 * minute;
+        scheduleTime[i] = new cron.RecurrenceRule();
+        scheduleTime[i].hour = scheduleTime[i - 1].hour + hour;
+        scheduleTime[i].minute = scheduleTime[i - 1].minute + minute;
+        scheduleTime[i].second = scheduleTime[i - 1].second + sec;
+        if (scheduleTime[i].second >= 60) {
+            scheduleTime[i].second = scheduleTime[i].second % 60;
+            scheduleTime[i].minute += 1;
+        }
+        if (scheduleTime[i].minute >= 60) {
+            scheduleTime[i].minute = scheduleTime[i].minute % 60;
+            scheduleTime[i].hour += 1;
+        }
+        playlist[i - 1].startAt = {
+            hour: scheduleTime[i - 1].hour,
+            minute: scheduleTime[i - 1].minute,
+            second: scheduleTime[i - 1].second
+        }
+    }
+    if (currentSong === undefined) {
+        currentSong = playlist[0];
+    }
+    for (let i = 0; i < playlist.length; i++) {
+        cron.scheduleJob(scheduleTime[i], function () {
+            currentSong = playlist[i];
+            io.sockets.emit('play', playlist[i]);
+        });
+    }
+    let now = new Date();
+    if (now.getHours() >= scheduleTime[0].hour && now.getMinutes() >= scheduleTime[0].minute) {
+        console.log(currentSong);
+        io.sockets.emit('play', currentSong);
+    }
+    // if(thoi gian > 15:30) {
+    //     // tinh toan
+    //     io.sockets.emit(su kien gi do, params);
+    // }
 });
 

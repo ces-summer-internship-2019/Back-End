@@ -122,23 +122,10 @@ async function filterResult(videolist) {
 
 async function getPlaylist() {
     try {
-        const playList = await Song.aggregate([
-            {
-                $project: {
-                    voteValue: { $subtract: ["$upvote", "$downvote"] },
-                    upvote: "$upvote",
-                    downvote: "$downvote",
-                    videoID: "$videoId",
-                    title: "$title",
-                    duration: "$duration",
-                    channelTitle: "$channelTitle",
-                    thumbnails: "$thumbnails"
-                }
-            },
-            {
-                $sort: { voteValue: -1 }
-            }
-        ]);
+        const playList = await Song.find({});
+        playList.sort(function (a, b) {
+            return (b.upvote - b.downvote) - (a.upvote - a.downvote);
+        });
         if (playList.length > 0)
             return {
                 status: 200,

@@ -34,6 +34,17 @@ const schema = new Schema({
     },
     duration: {
         type: Number
+    },
+    startAt: {
+        hour: {
+            type: Number,
+        },
+        minute: {
+            type: Number,
+        },
+        second: {
+            type: Number,
+        }
     }
 });
 

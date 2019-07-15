@@ -1,18 +1,28 @@
+
+
 <!DOCTYPE html>
 <html>
 
 <body>
-  <p> Messages: <span id='uwu'> </span> </p>
-  <button onclick="myFunction()">Click me</button>
+  <iframe id="youtubeplayer" width="560" height="315" src="" frameborder="0"
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
   <p id="demo"></p>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io.connect();
-    socket.on('timene', function (data) {
-      document.getElementById("uwu").innerHTML = data;
+    let socket = io.connect();
+    socket.on('play', function (data) {
+      let now = new Date();
+      let passingTime = (now.getHours() - data.startAt.hour) * 3600 + (now.getMinutes() - data.startAt.minute) * 60 + (now.getSeconds() - data.startAt.second);
+      document.getElementById("youtubeplayer").src = 'https://www.youtube.com/embed/' + data.videoId + `?start=${passingTime}&autoplay=1&controls=0`;
     })
   </script>
+  <style>
+    #youtubeplayer {
+      pointer-events: none
+    }
+  </style>
 </body>
 
 </html>
+
