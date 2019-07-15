@@ -67,7 +67,7 @@ io.sockets.on('connection', async function (socket) {
     let scheduleTime = [];
     scheduleTime[0] = new cron.RecurrenceRule();
     scheduleTime[0].hour = 14;
-    scheduleTime[0].minute = 39;
+    scheduleTime[0].minute = 50;
     scheduleTime[0].second = 0;
 
     for (let i = 1; i < playlist.length; i++) {
@@ -105,7 +105,7 @@ io.sockets.on('connection', async function (socket) {
     let now = new Date();
     if (now.getHours() >= scheduleTime[0].hour && now.getMinutes() >= scheduleTime[0].minute) {
         console.log(currentSong);
-        io.sockets.emit('play', currentSong);
+        socket.emit('play', currentSong);
     }
     // if(thoi gian > 15:30) {
     //     // tinh toan
