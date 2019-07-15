@@ -67,7 +67,7 @@ io.sockets.on('connection', async function (socket) {
     let scheduleTime = [];
     scheduleTime[0] = new cron.RecurrenceRule();
     scheduleTime[0].hour = 14;
-    scheduleTime[0].minute = 30;
+    scheduleTime[0].minute = 39;
     scheduleTime[0].second = 0;
 
     for (let i = 1; i < playlist.length; i++) {
