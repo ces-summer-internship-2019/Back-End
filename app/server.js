@@ -20,16 +20,15 @@ app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt.jwt());
 
-
 // api routes
 app.get('/api', (req, res) => {
     res.send({ msg: 'Hello! Server is up and running' });
 });
 
 // socket io test routes
-app.get('/socket-io', (req, res) => {
-    res.sendFile('socket-test.html', { root: __dirname });
-});
+// app.get('/socket-io', (req, res) => {
+//     res.sendFile('socket-test.html', { root: __dirname });
+// });
 
 app.use('/api/users', require('./users/users.controller'));
 
@@ -66,8 +65,8 @@ io.sockets.on('connection', async function (socket) {
     const playlist = (await songService.getPlaylist()).message;
     let scheduleTime = [];
     scheduleTime[0] = new cron.RecurrenceRule();
-    scheduleTime[0].hour = 11;
-    scheduleTime[0].minute = 48;
+    scheduleTime[0].hour = 13;
+    scheduleTime[0].minute = 55;
     scheduleTime[0].second = 0;
 
     for (let i = 1; i < playlist.length; i++) {
