@@ -110,9 +110,8 @@ io.sockets.on('connection', async function (socket) {
     if (now.getHours() >= scheduleTime[0].hour && now.getMinutes() >= scheduleTime[0].minute) {
         socket.emit('play', currentSong);
     }
-    // if(thoi gian > 15:30) {
-    //     // tinh toan
-    //     io.sockets.emit(su kien gi do, params);
-    // }
+    if (now.getHours() >= scheduleTime[playlist.length].hour && now.getMinutes() >= scheduleTime[playlist.length].minute) {
+        socket.emit('end', "Finished playing videos !!!");
+    }
 });
 
