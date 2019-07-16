@@ -69,7 +69,7 @@ io.sockets.on('connection', async function (socket) {
     scheduleTime[0].minute = 0;
     scheduleTime[0].second = 0;
 
-    for (let i = 1; i < playlist.length; i++) {
+    for (let i = 1; i <= playlist.length; i++) {
         const duration = playlist[i - 1].duration;
         const hour = (duration / 3600 | 0);
         const minute = ((duration - 3600 * hour) / 60 | 0);
@@ -101,6 +101,11 @@ io.sockets.on('connection', async function (socket) {
             io.sockets.emit('play', playlist[i]);
         });
     }
+    cron.scheduleJob(scheduleTime[playlist.length], function () {
+        io.sockets.emit('end', "Finished playing videos !!!");
+        userController.reset();
+        songController.reset();
+    });
     let now = new Date();
     if (now.getHours() >= scheduleTime[0].hour && now.getMinutes() >= scheduleTime[0].minute) {
         socket.emit('play', currentSong);
